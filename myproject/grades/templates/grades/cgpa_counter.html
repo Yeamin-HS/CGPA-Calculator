@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGPA Counter</title>
+    <!-- ✅ Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /*add css for hover effect on buttons*/
+      button:hover {
+        transform: scale(1.02);
+        transition: transform 0.2s;
+      } 
+
+      /* add css for hover effect on input fields */  
+      input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+        outline: none;
+        transition: box-shadow 0.2s, border-color 0.2s;
+      }
+    
+
+    </style>
+  </head>
+  <body
+    class="bg-gray-100 min-h-screen flex items-center justify-center relative"
+  >
+    <div class="w-full max-w-3xl bg-white p-8 rounded-2xl shadow-lg">
+      <h1 id="animeTitle" class="text-2xl font-bold text-center text-indigo-600 mb-6">
+        CGPA Counter
+      </h1>
+      <script>
+        // Animate the h1 title using Tailwind classes
+        // Animate the h1 title using Tailwind classes
+        const animeTitle = document.getElementById("animeTitle");
+        animeTitle.addEventListener("mouseover", function () {
+          animeTitle.classList.add(
+            "hover:scale-150",
+            "hover:text-indigo-800",
+            "transition",
+            "duration-300",
+            "ease-in-out"
+          );
+        });
+
+        // Apply similar hover effect to all input fields
+        document.querySelectorAll("input").forEach(function(input) {
+          input.addEventListener("mouseover", function () {
+            input.classList.add(
+              "hover:scale-105",
+              "hover:border-indigo-500",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+          });
+          
+        });
+
+      </script>
+      
+
+      <form id="cgpaForm" class="space-y-6">
+        <!-- Completed Course Count -->
+        <div>
+          <label class="block font-medium text-gray-700"
+            >Completed Course Count</label
+          >
+          
+          <div class="mb-2"></div>
+
+          <input
+            type="number"
+            id="completed"
+            name="completed"
+            min="0"
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Current CGPA -->
+        <div>
+          <label class="block font-medium text-gray-700">Current CGPA</label>
+          <div class="mb-2"></div>
+          <input
+            type="number"
+            step="0.01"
+            id="current"
+            name="current"
+            min="0"
+            max="4"
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Number of New Courses -->
+        <div>
+          <label class="block font-medium text-gray-700"
+            >Number of Courses Taken</label
+          >
+          <div class="mb-2"></div>
+          <input
+            type="number"
+            id="numCourses"
+            name="numCourses"
+            min="1"
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <!-- Dynamic Course Grades -->
+        <div id="coursesContainer" class="flex flex-col gap-4"></div>
+
+        <button
+          type="button"
+          id="generateCourses"
+          class="w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+          Add Courses
+        </button>
+
+        <button
+          type="submit"
+          class="w-full py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+        >
+          Calculate CGPA
+        </button>
+      </form>
+    </div>
+
+    <!-- ✅ Popup Modal -->
+    <div
+      id="popup"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center relative"
+      >
+        <h2 class="text-2xl font-bold text-green-600">
+          🎉 Congratulations! 🎉
+        </h2>
+        <p id="popupMessage" class="mt-4 text-lg text-gray-700"></p>
+        <button
+          id="closePopup"
+          class="mt-6 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const generateBtn = document.getElementById("generateCourses");
+      const coursesContainer = document.getElementById("coursesContainer");
+      const numCoursesInput = document.getElementById("numCourses");
+      const form = document.getElementById("cgpaForm");
+      const popup = document.getElementById("popup");
+      const popupMessage = document.getElementById("popupMessage");
+      const closePopup = document.getElementById("closePopup");
+
+      // Generate dynamic grade inputs
+      generateBtn.addEventListener("click", () => {
+        const numCourses = parseInt(numCoursesInput.value);
+        coursesContainer.innerHTML = ""; // clear old inputs
+
+        if (isNaN(numCourses) || numCourses <= 0) {
+          alert("Please enter a valid number of courses");
+          return;
+        }
+
+        for (let i = 1; i <= numCourses; i++) {
+          const div = document.createElement("div");
+          div.className = "flex items-center gap-4";
+          div.innerHTML = `
+          <label class="w-1/3 font-medium text-gray-700">Course ${i} Grade</label>
+          <input type="number" step="0.01" min="0" max="4" 
+                 name="grade${i}" class="w-2/3 p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500">
+        `;
+          coursesContainer.appendChild(div);
+        }
+
+      
+      generateBtn.style.display = "none";
+  
+      });
+
+      // Handle form submit
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const completed =
+          parseInt(document.getElementById("completed").value) || 0;
+        const current =
+          parseFloat(document.getElementById("current").value) || 0;
+        const numCourses = parseInt(numCoursesInput.value) || 0;
+
+        let totalCredits = completed * 3;
+        let totalPoints = current * totalCredits;
+
+        for (let i = 1; i <= numCourses; i++) {
+          const grade = parseFloat(form[`grade${i}`].value) || 0;
+          totalPoints += grade * 3;
+          totalCredits += 3;
+        }
+
+        const cgpa = (totalPoints / totalCredits).toFixed(2);
+
+        // ✅ Show popup with CGPA
+        popupMessage.textContent = `Your Current CGPA is ${cgpa}`;
+        popup.classList.remove("hidden");
+
+        {% comment %} // 🎉 Confetti effect
+        for (let i = 0; i < 30; i++) {
+          const confetti = document.createElement("div");
+          confetti.classList.add("confetti");
+          confetti.style.left = Math.random() * 100 + "vw";
+          confetti.style.backgroundColor = `hsl(${
+            Math.random() * 360
+          }, 70%, 50%)`;
+          confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 5000);
+        } {% endcomment %}
+      });
+
+      // Close popup
+      closePopup.addEventListener("click", () => {
+        popup.classList.add("hidden");
+      });
+
+
+
+
+       document.querySelectorAll("input").forEach(function(input) {
+          input.addEventListener("mouseover", function () {
+            input.classList.add(
+              "hover:scale-105",
+              "hover:border-indigo-500",
+              "transition",
+              "duration-200",
+              "ease-in-out"
+            );
+          });
+        })
+    </script>
+  </body>
+</html>
