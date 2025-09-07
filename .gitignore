@@ -4,20 +4,20 @@ __pycache__/
 *.pyo
 *.pyd
 *.db
+*.sqlite3
 
 # Virtual environment
 venv/
 .env
+.venv/
 
-# IDE
+# Django stuff
+db.sqlite3
+media/
+staticfiles/
+
+# IDE & OS
 .vscode/
 .idea/
-
-# Django
-db.sqlite3
-staticfiles/
-media/
-
-# System
 .DS_Store
 Thumbs.db
