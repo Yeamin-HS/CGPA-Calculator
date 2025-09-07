@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +29,10 @@ SECRET_KEY = 'django-insecure-d6&m082143qw_)d0gg^p2495^nyls*4-4-*6pd5oedscq(!seu
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = []
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Application definition
 
@@ -125,3 +128,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
