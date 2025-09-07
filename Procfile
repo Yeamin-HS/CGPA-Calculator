@@ -1,1 +1,1 @@
-web: gunicorn storflow.wsgi
+web: gunicorn myproject.wsgi
