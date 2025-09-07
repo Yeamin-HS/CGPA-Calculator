@@ -8,7 +8,17 @@
     <!-- ✅ Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      /*add css for hover effect on buttons*/
+ 
+       body {
+            background-image: url("{% static '/image/ty.jpg' %}");
+            background-size: cover;      /* cover the whole page */
+            background-repeat: no-repeat; /* don't repeat */
+            background-position: center; /* center the image */
+            background-opacity: 0.40;             /* slight transparency */
+            background-blur: 0.5;   /* slight transparency */
+
+                 /* hide overflow */
+        }
       button:hover {
         transform: scale(1.02);
         transition: transform 0.2s;
@@ -26,15 +36,24 @@
     </style>
   </head>
   <body
+
+
+
+
     class="bg-gray-100 min-h-screen flex items-center justify-center relative"
   >
-    <div class="w-full max-w-3xl bg-white p-8 rounded-2xl shadow-lg">
+
+
+<!-- Background image -->
+
+
+
+    <div class="w-full max-w-3xl bg-blue-100 p-10 rounded-2xl shadow-lg z-15">
       <h1 id="animeTitle" class="text-2xl font-bold text-center text-indigo-600 mb-6">
         CGPA Counter
       </h1>
       <script>
-        // Animate the h1 title using Tailwind classes
-        // Animate the h1 title using Tailwind classes
+     
         const animeTitle = document.getElementById("animeTitle");
         animeTitle.addEventListener("mouseover", function () {
           animeTitle.classList.add(
@@ -208,8 +227,14 @@
 
         const cgpa = (totalPoints / totalCredits).toFixed(2);
 
-        // ✅ Show popup with CGPA
+        if (isNaN(cgpa)) {
+          popupMessage.textContent = "Please put your grade first";
+        } else {
         popupMessage.textContent = `Your Current CGPA is ${cgpa}`;
+        }
+
+        // ✅ Show popup with CGPA
+        
         popup.classList.remove("hidden");
 
         {% comment %} // 🎉 Confetti effect
